@@ -2,6 +2,19 @@
   "version": 3,
   "targets": {
     "net6.0": {
+      "dcsoup/1.0.0": {
+        "type": "package",
+        "compile": {
+          "lib/netstandard1.3/Supremes.dll": {
+            "related": ".deps.json;.pdb"
+          }
+        },
+        "runtime": {
+          "lib/netstandard1.3/Supremes.dll": {
+            "related": ".deps.json;.pdb"
+          }
+        }
+      },
       "Microsoft.Extensions.ApiDescription.Server/3.0.0": {
         "type": "package",
         "build": {
@@ -92,6 +105,23 @@
     }
   },
   "libraries": {
+    "dcsoup/1.0.0": {
+      "sha512": "LVtvXmuEdu3YFXxj3OpnqlLy/iOvnQbR70tGumyMOo9YllDfjils/wVwppFON+9qAvhTWIHeLTW5HDqhVpuJ1Q==",
+      "type": "package",
+      "path": "dcsoup/1.0.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "dcsoup.1.0.0.nupkg.sha512",
+        "dcsoup.nuspec",
+        "lib/net45/Supremes.dll",
+        "lib/net45/Supremes.pdb",
+        "lib/net45/Supremes.xml",
+        "lib/netstandard1.3/Supremes.deps.json",
+        "lib/netstandard1.3/Supremes.dll",
+        "lib/netstandard1.3/Supremes.pdb"
+      ]
+    },
     "Microsoft.Extensions.ApiDescription.Server/3.0.0": {
       "sha512": "LH4OE/76F6sOCslif7+Xh3fS/wUUrE5ryeXAMcoCnuwOQGT5Smw0p57IgDh/pHgHaGz/e+AmEQb7pRgb++wt0w==",
       "type": "package",
@@ -220,7 +250,8 @@
   },
   "projectFileDependencyGroups": {
     "net6.0": [
-      "Swashbuckle.AspNetCore >= 6.2.3"
+      "Swashbuckle.AspNetCore >= 6.2.3",
+      "dcsoup >= 1.0.0"
     ]
   },
   "packageFolders": {
@@ -265,6 +296,10 @@
           "Swashbuckle.AspNetCore": {
             "target": "Package",
             "version": "[6.2.3, )"
+          },
+          "dcsoup": {
+            "target": "Package",
+            "version": "[1.0.0, )"
           }
         },
         "imports": [

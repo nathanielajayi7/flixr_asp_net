@@ -25,3 +25,4 @@ C:\Users\Nathan#\Desktop\Flixr_App2\obj\Debug\net6.0\refint\Flixr_App2.dll
 C:\Users\Nathan#\Desktop\Flixr_App2\obj\Debug\net6.0\Flixr_App2.pdb
 C:\Users\Nathan#\Desktop\Flixr_App2\obj\Debug\net6.0\Flixr_App2.genruntimeconfig.cache
 C:\Users\Nathan#\Desktop\Flixr_App2\obj\Debug\net6.0\ref\Flixr_App2.dll
+C:\Users\Nathan#\Desktop\Flixr_App2\bin\Debug\net6.0\Supremes.dll

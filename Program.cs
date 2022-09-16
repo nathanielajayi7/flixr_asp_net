@@ -18,7 +18,7 @@ app.MapGet(
     =>  VideoController.getMovieById(id.Request.Path)
 );
 
-app.MapGet("/videos", async () => await VideoController.getMovies());
+app.MapGet("/movies", async () => await VideoController.getMovies());
 
 app.MapGet("/series", async () => await VideoController.getSeries());
 

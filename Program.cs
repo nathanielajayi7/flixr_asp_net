@@ -11,12 +11,12 @@ app.MapGet(
     => await VideoController.getPopularMovies()
 );
 
+app.MapGet("/movies/{id}", async (string id) =>
+{
+    return await VideoController.getMovieById(id);
 
-app.MapGet(
-    "/movies/{id:required}",
-     (id)
-    =>  VideoController.getMovieById(id.Request.Path)
-);
+
+});
 
 app.MapGet("/movies", async () => await VideoController.getMovies());
 

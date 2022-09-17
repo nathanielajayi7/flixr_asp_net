@@ -83,28 +83,54 @@ namespace Flixr
         public static async Task<string> getMovieById(string base64)
         {
 
+
+
+            string currentUrl = "";
+
+
             try
             {
-
-                string currentUrl = Base64Decode(base64.Split("movies/").Last());
-
-                var httpClient = new MyHttpClient(currentUrl);
-
-                ListDictionary response = new ListDictionary();
-
-                string rawHtml = await httpClient.Get();
-
-                return rawHtml;
+                currentUrl = Base64Decode(base64.Split("movies/").Last());
             }
             catch
             {
-
-                throw new Exception("cannot decode id");
+                throw new Exception("cannot decode movie id");
             }
+
+            Console.WriteLine(currentUrl);
+
+            var httpClient = new MyHttpClient(currentUrl);
+
+            ListDictionary response = new ListDictionary();
+
+            string rawHtml = await httpClient.Get();
+
+            Document doc = Dcsoup.Parse(rawHtml);
+            Element videoInfo = doc.Select("article.post-body").First;
+            Elements relatedInfo = doc.Select("div.related-posts").First.Select("div.rp-list").First.Select("article.rp-one");
+            response.Add(
+                "data",
+            new NetnaijaMovieDetail(
+                videoInfo,
+                relatedInfo,
+                currentUrl
+
+            )
+            );
+
+            var json = JsonSerializer.Serialize(response);
+
+
+            return (json);
+
+
 
 
 
         }
+
+
+
 
         public static async Task<string> getSeries(string? query = null)
         {

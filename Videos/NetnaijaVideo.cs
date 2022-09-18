@@ -62,10 +62,19 @@ namespace Flixr
 
         private NetnaijaVideo(Element e)
         {
-            this.Name = e.Select("img").First.Attr("title");
+            this.Name = e.Select("img").First.Attr("title").Split("(", 2).First();
             this.Image = e.Select("img").First.Attr("src");
             this.Link = e.GetElementsByAttribute("href").First.Attr("href");
             this.Id = Base64Encode(e.GetElementsByAttribute("href").First.Attr("href"));
+        }
+
+        private NetnaijaVideo(string Name, string Image, string Link)
+        {
+            this.Name = Name.Split("(", 2).First();
+            this.Image = Image;
+            this.Link = Image;
+            this.Id = Base64Encode(Link);
+
         }
 
         public static NetnaijaVideo? create(Element e)
@@ -88,12 +97,23 @@ namespace Flixr
 
         }
 
-                public static NetnaijaVideo? createFromSearchResult(Element e)
+        public static NetnaijaVideo? createFromSearchResult(Element e)
         {
-// String title = e.getElementsByAttribute("href").first().text().split(":", 2)[1].trim();
-            string Name = e.GetElementsByAttribute("href").First.Text;
-            string Image = e.GetElementsByAttribute("src").First.Attr("src");
-            string Link = e.GetElementsByAttribute("href").First.Attr("href");
+            // String title = e.getElementsByAttribute("href").first().text().split(":", 2)[1].trim();
+            string? Name = null;
+            string? Image = null;
+            string? Link = null;
+            try
+            {
+                Name = e.GetElementsByAttribute("href").First.Text;
+                Image = e.Select("img").First.Attr("src");
+                Link = e.GetElementsByAttribute("href").First.Attr("href");
+
+            }
+            catch
+            {
+                return null;
+            }
 
             if (Image == null)
             {
@@ -104,17 +124,18 @@ namespace Flixr
                 return null;
             }
 
-            if(!Name.ToLower().StartsWith("movie:") && !Name.ToLower().StartsWith("series:")){
+            if (!Name.ToLower().StartsWith("movie:") && !Name.ToLower().StartsWith("series:"))
+            {
 
                 return null;
 
             }
 
-            Name = Name.Split(":", 2).First().Trim();
+            Name = Name.Split(":", 2).Last().Trim();
 
             // string Id = Base64Encode(Link!);
 
-            return new NetnaijaVideo(e);
+            return new NetnaijaVideo(Name, Image, Link);
 
         }
 

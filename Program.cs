@@ -18,11 +18,20 @@ app.MapGet("/movies/{id}", async (string id) =>
 
 });
 
-app.MapGet("/movies", async (context) => await VideoController.getMovies(context));
+app.MapGet("/movies", async (HttpContext context) =>
+{
+    return await VideoController.getMovies(context);
+});
 
 
-app.MapGet("/search", async (context) => await VideoController.searchResult(context));
+app.MapGet("/search", async (HttpContext context) =>
+{
+    return await VideoController.searchResult(context);
+});
 
-app.MapGet("/series", async (context) => await VideoController.getSeries(context));
+app.MapGet("/series", async (HttpContext context) =>
+{
+    return await VideoController.getSeries(context);
+});
 
 app.Run();

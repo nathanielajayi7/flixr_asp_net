@@ -16,14 +16,25 @@ namespace Flixr
 
         public static async Task<string> searchResult(HttpContext context)
         {
-            var param = HttpUtility.ParseQueryString(context.Request.Path).Get("query");
 
-            var httpClient = new MyHttpClient(Netnaija.SearchUrl + (param == null ?
-            param!
+            var location = ($"{context.Request.QueryString}");
+
+
+
+            string? param = null;
+
+
+
+            param = location.Split("?", 2 ).Last().Split("&").Last().Trim();
+
+
+            var httpClient = new MyHttpClient(Netnaija.SearchUrl + (param != "" ?
+            param!.Split("=").Last()
             :
-            "")
-            )
+            ""
+            ))
             ;
+
 
             string rawHtml = await httpClient.Get();
 
@@ -54,15 +65,25 @@ namespace Flixr
             {
                 throw new NotImplementedException("The query string has not been implemented");
             }
+            var location = ($"{context.Request.QueryString}");
 
-            var param = HttpUtility.ParseQueryString(context.Request.Path).Get("page");
 
-            var httpClient = new MyHttpClient(Netnaija.VideoUrl + (param == null ?
-            $"/page/{param!}"
+
+            string? param = null;
+
+
+
+            param = location.Split("?", 2).Last().Split("&").Last().Trim();
+
+
+            var httpClient = new MyHttpClient(Netnaija.VideoUrl + (param != "" ?
+            $"/page/{param!.Split("=").Last()}"
             :
             "")
             )
             ;
+
+
 
             string rawHtml = await httpClient.Get();
 
@@ -181,14 +202,23 @@ namespace Flixr
             {
                 throw new NotImplementedException("The query string has not been implemented");
             }
+            var location = ($"{context.Request.QueryString}");
 
-            var param = HttpUtility.ParseQueryString(context.Request.Path).Get("page");
 
-            var httpClient = new MyHttpClient(Netnaija.SeriesUrl + (param == null ?
-            $"/page/{param!}"
+
+            string? param = null;
+
+
+
+            param = location.Split("?", 2).Last().Split("&").Last().Trim();
+
+
+            var httpClient = new MyHttpClient(Netnaija.SeriesUrl + (param != "" ?
+            $"/page/{param!.Split("=").Last()}"
             :
-            ""
-            ));
+            "")
+            )
+            ;
 
             ListDictionary response = new ListDictionary();
 

@@ -1,3 +1,4 @@
+using System.Web;
 using System.Linq;
 using System.Net.Http;
 using System.Collections.Specialized;
@@ -12,15 +13,29 @@ namespace Flixr
 
         static int index = 3;
 
-        public static async Task<string> getMovies(string? query = null)
+
+        public static async Task<string> searchResult(HttpContext context)
         {
+            return "";
+        }
+
+        public static async Task<string> getMovies(HttpContext context, string? query = null)
+        {
+
 
             if (query != null)
             {
                 throw new NotImplementedException("The query string has not been implemented");
             }
 
-            var httpClient = new MyHttpClient(Netnaija.VideoUrl);
+            var param = HttpUtility.ParseQueryString(context.Request.Path).Get("page");
+
+            var httpClient = new MyHttpClient(Netnaija.VideoUrl + (param == null ?
+            $"/page/{param!}"
+            :
+            "")
+            )
+            ;
 
             string rawHtml = await httpClient.Get();
 
@@ -132,7 +147,7 @@ namespace Flixr
 
 
 
-        public static async Task<string> getSeries(string? query = null)
+        public static async Task<string> getSeries(HttpContext context, string? query = null)
         {
 
             if (query != null)
@@ -140,7 +155,13 @@ namespace Flixr
                 throw new NotImplementedException("The query string has not been implemented");
             }
 
-            var httpClient = new MyHttpClient(Netnaija.SeriesUrl);
+            var param = HttpUtility.ParseQueryString(context.Request.Path).Get("page");
+
+            var httpClient = new MyHttpClient(Netnaija.SeriesUrl + (param == null ?
+            $"/page/{param!}"
+            :
+            ""
+            ));
 
             ListDictionary response = new ListDictionary();
 

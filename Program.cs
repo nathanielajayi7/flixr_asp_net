@@ -18,8 +18,11 @@ app.MapGet("/movies/{id}", async (string id) =>
 
 });
 
-app.MapGet("/movies", async () => await VideoController.getMovies());
+app.MapGet("/movies", async (context) => await VideoController.getMovies(context));
 
-app.MapGet("/series", async () => await VideoController.getSeries());
+
+app.MapGet("/search", async (context) => await VideoController.searchResult(context));
+
+app.MapGet("/series", async (context) => await VideoController.getSeries(context));
 
 app.Run();

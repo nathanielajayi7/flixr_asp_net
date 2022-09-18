@@ -55,7 +55,9 @@ namespace Flixr
         public string? Link { get; set; }
         public string? Id { get; set; }
 
-        public bool isSeries => this.Link?.Contains("/series") ?? false;
+        public bool isSeries => this.Link?.Contains("videos/series") ?? false;
+
+        public bool isMovie => this.Link?.Contains("videos/movies") ?? false;
 
         private NetnaijaVideo(Element e)
         {

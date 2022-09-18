@@ -1,4 +1,5 @@
 
+using System.Linq;
 using System.Net.Http.Headers;
 using Supremes.Nodes;
 
@@ -82,6 +83,36 @@ namespace Flixr
             {
                 return null;
             }
+
+            return new NetnaijaVideo(e);
+
+        }
+
+                public static NetnaijaVideo? createFromSearchResult(Element e)
+        {
+// String title = e.getElementsByAttribute("href").first().text().split(":", 2)[1].trim();
+            string Name = e.GetElementsByAttribute("href").First.Text;
+            string Image = e.GetElementsByAttribute("src").First.Attr("src");
+            string Link = e.GetElementsByAttribute("href").First.Attr("href");
+
+            if (Image == null)
+            {
+                return null;
+            }
+            if (Image!.Trim() == "")
+            {
+                return null;
+            }
+
+            if(!Name.ToLower().StartsWith("movie:") && !Name.ToLower().StartsWith("series:")){
+
+                return null;
+
+            }
+
+            Name = Name.Split(":", 2).First().Trim();
+
+            // string Id = Base64Encode(Link!);
 
             return new NetnaijaVideo(e);
 

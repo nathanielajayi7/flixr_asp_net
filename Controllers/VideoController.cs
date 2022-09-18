@@ -16,7 +16,34 @@ namespace Flixr
 
         public static async Task<string> searchResult(HttpContext context)
         {
-            return "";
+            var param = HttpUtility.ParseQueryString(context.Request.Path).Get("query");
+
+            var httpClient = new MyHttpClient(Netnaija.SearchUrl + (param == null ?
+            param!
+            :
+            "")
+            )
+            ;
+
+            string rawHtml = await httpClient.Get();
+
+            ListDictionary response = new ListDictionary();
+
+            List<NetnaijaVideo> videoList = new List<NetnaijaVideo>();
+
+            Document doc = Dcsoup.Parse(rawHtml);
+            Elements videoFiles = doc.Select("div.search-results").First.Select("article");
+            for (int i = 0; i < videoFiles.Count; i++)
+            {
+                var e = NetnaijaVideo.createFromSearchResult(videoFiles[i]);
+                if (e != null) videoList.Add(e);
+            }
+
+
+            response.Add("result", videoList);
+            var json = JsonSerializer.Serialize(response);
+
+            return (json);
         }
 
         public static async Task<string> getMovies(HttpContext context, string? query = null)

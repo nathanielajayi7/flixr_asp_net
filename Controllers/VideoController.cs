@@ -209,9 +209,7 @@ namespace Flixr
             string? param = null;
 
 
-
             param = location.Split("?", 2).Last().Split("&").Last().Trim();
-
 
             var httpClient = new MyHttpClient(Netnaija.SeriesUrl + (param != "" ?
             $"/page/{param!.Split("=").Last()}"

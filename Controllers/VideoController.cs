@@ -1,12 +1,30 @@
-using System.Web;
-using System.Linq;
-using System.Net.Http;
+// using System.Web;
+// using System.Linq;
+// using System.Net.Http;
 using System.Collections.Specialized;
 using Supremes;
 using Supremes.Nodes;
 using System.Text.Json;
+
+using Newtonsoft.Json;
 namespace Flixr
 {
+
+
+    class JsonUtil
+    {
+        public static string JsonPrettify(string json)
+        {
+            using (var stringReader = new StringReader(json))
+            using (var stringWriter = new StringWriter())
+            {
+                var jsonReader = new JsonTextReader(stringReader);
+                var jsonWriter = new JsonTextWriter(stringWriter) { Formatting = Formatting.Indented };
+                jsonWriter.WriteToken(jsonReader);
+                return stringWriter.ToString();
+            }
+        }
+    }
 
     public class VideoController
     {
@@ -25,7 +43,7 @@ namespace Flixr
 
 
 
-            param = location.Split("?", 2 ).Last().Split("&").Last().Trim();
+            param = location.Split("?", 2).Last().Split("&").Last().Trim();
 
 
             var httpClient = new MyHttpClient(Netnaija.SearchUrl + (param != "" ?
@@ -52,9 +70,11 @@ namespace Flixr
 
 
             response.Add("result", videoList);
-            var json = JsonSerializer.Serialize(response);
+            var json = System.Text.Json.JsonSerializer.Serialize(response);
 
-            return (json);
+            return (
+                JsonUtil.JsonPrettify(
+                json));
         }
 
         public static async Task<string> getMovies(HttpContext context, string? query = null)
@@ -103,9 +123,12 @@ namespace Flixr
             response.Add("movies", videoList);
             response.Add("header", videoList[index]);
 
-            var json = JsonSerializer.Serialize(response);
 
-            return (json);
+            var json = System.Text.Json.JsonSerializer.Serialize(response);
+
+            return (
+                JsonUtil.JsonPrettify(
+                json));
 
         }
 
@@ -137,9 +160,12 @@ namespace Flixr
             response.Add("movies", videoList);
             // response.Add("header", videoList[index]);
 
-            var json = JsonSerializer.Serialize(response);
 
-            return (json);
+            var json = System.Text.Json.JsonSerializer.Serialize(response);
+
+            return (
+                JsonUtil.JsonPrettify(
+                json));
 
         }
 
@@ -181,10 +207,12 @@ namespace Flixr
             )
             );
 
-            var json = JsonSerializer.Serialize(response);
 
+            var json = System.Text.Json.JsonSerializer.Serialize(response);
 
-            return (json);
+            return (
+                JsonUtil.JsonPrettify(
+                json));
 
 
 
@@ -236,11 +264,12 @@ namespace Flixr
             response.Add("series", videoList);
             response.Add("header", videoList[index]);
 
-            var json = JsonSerializer.Serialize(response);
 
+            var json = System.Text.Json.JsonSerializer.Serialize(response);
 
-            return (json);
-
+            return (
+                JsonUtil.JsonPrettify(
+                json));
         }
 
         public static string Base64Decode(string base64EncodedData)

@@ -62,7 +62,7 @@ namespace Flixr
 
         private NetnaijaVideo(Element e)
         {
-            this.Name = e.Select("img").First.Attr("title").Split("(", 2).First();
+            this.Name = e.Select("img").First.Attr("title").Split("(", 2).First().Trim();
             this.Image = e.Select("img").First.Attr("src");
             this.Link = e.GetElementsByAttribute("href").First.Attr("href");
             this.Id = Base64Encode(e.GetElementsByAttribute("href").First.Attr("href"));
@@ -70,7 +70,7 @@ namespace Flixr
 
         private NetnaijaVideo(string Name, string Image, string Link)
         {
-            this.Name = Name.Split("(", 2).First();
+            this.Name = Name.Split("(", 2).First().Trim();
             this.Image = Image;
             this.Link = Image;
             this.Id = Base64Encode(Link);
@@ -80,7 +80,7 @@ namespace Flixr
         public static NetnaijaVideo? create(Element e)
         {
 
-            string Name = e.Select("img").First.Attr("title");
+            string Name = e.Select("img").First.Attr("title").Trim();
             string Image = e.Select("img").First.Attr("src");
             string Link = e.GetElementsByAttribute("href").First.Attr("href");
 

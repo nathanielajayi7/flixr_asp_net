@@ -34,4 +34,12 @@ app.MapGet("/series", async (HttpContext context) =>
     return await VideoController.getSeries(context);
 });
 
+
+app.MapGet("/series/{id}", async (string id) =>
+{
+    return await VideoController.getMovieById(id);
+
+
+});
+
 app.Run();

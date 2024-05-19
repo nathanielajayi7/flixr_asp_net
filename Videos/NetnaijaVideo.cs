@@ -19,24 +19,42 @@ namespace Flixr
         public string? ImdbLink { get; set; }
 
         public List<NetnaijaVideo> youMayLike { get; set; }
+        public List<Category> categories { get; set; }
 
         public NetnaijaMovieDetail(Element e, Elements r, string Url)
         {
-            this.Name = e.Select("img").First.Attr("title");
-            this.Image = e.Select("img").First.Attr("src");
+            var _url = new Uri(Url);
+            var _BaseUrl = _url.GetLeftPart(UriPartial.Authority);
+            this.Name = e.Select("h1.post-title").Text.Trim().Split("(", 2).First().Trim();
+            this.Image = _BaseUrl + e.Select("img.wp-post-image").First.Attr("src");
             this.Link = Url;
-            this.Description = e.Select("p")[0].Text + " " + e.Select("p")[1].Text;
-            this.youtubeTrailer = e.Select("div.video-player").First.Select("iframe").First.Attr("src");
-
+            this.Description = e.Select("div.entry-content").First.Select("p").First.Text;
+            this.youtubeTrailer = "https" + e.Select("iframe").Last.Attr("src");
             this.youMayLike = new List<NetnaijaVideo>();
+            this.categories = new List<Category>();
 
             foreach (var video in r)
             {
-                var item = NetnaijaVideo.create(video, Url);
+                var item = NetnaijaVideo.createFromData(
+                    Image: _BaseUrl + video.Select("img").First.Attr("src"),
+                    Link: _BaseUrl + video.Select("a").First.Attr("href"),
+                    Name: video.Select("h3.post-title").First.Select("a").Text.Trim()
+                );
                 if (item != null)
                     youMayLike.Add(item);
 
             }
+
+
+            Elements cats = e.Select("div.entry-header").First.Select("a.post-cat");
+
+            foreach (var cat in cats)
+            {
+                var url = new Uri(Url);
+                var _catUrl = url.GetLeftPart(UriPartial.Authority) + cat.Attr("href");
+                this.categories.Add(new Category(cat.Text, _catUrl));
+            }
+
             try
             {
                 this.ImdbLink = e.Select("blockquote.quote-content").Select("p").Last.Select("a").First.Attr("href");
@@ -65,7 +83,7 @@ namespace Flixr
             this.Name = e.Select("h2.post-title").First.Select("a").Text.Trim().Split("(", 2).First().Trim();
             this.Image = SourceUrl + e.Select("img").First.Attr("src");
             this.Link = SourceUrl + e.Select("a").First.Attr("href");
-            this.Id = Base64Encode(e.GetElementsByAttribute("href").First.Attr("href"));
+            this.Id = Base64Encode(this.Link);
         }
 
         private NetnaijaVideo(string Name, string Image, string Link)
@@ -94,6 +112,28 @@ namespace Flixr
             }
 
             return new NetnaijaVideo(e, SourceUrl);
+
+        }
+
+        public static NetnaijaVideo? createFromData(
+
+            string Image, string Link, string Name
+        )
+        {
+
+
+            if (Image == null)
+            {
+                return null;
+            }
+            if (Image!.Trim() == "")
+            {
+                return null;
+            }
+
+            return new NetnaijaVideo(
+                Name, Image, Link
+            );
 
         }
 
@@ -148,4 +188,20 @@ namespace Flixr
 
 
     }
+}
+
+public class Category
+{
+
+    public string Name { get; set; }
+    public string Link { get; set; }
+
+    //constructor
+
+    public Category(string Name, string Link)
+    {
+        this.Name = Name;
+        this.Link = Link;
+    }
+
 }

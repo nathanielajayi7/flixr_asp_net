@@ -95,9 +95,11 @@ namespace Flixr
 
             param = location.Split("?", 2).Last().Split("&").Last().Trim();
 
+            string? page = param?.Split("=").Last();
+
 
             var httpClient = new MyHttpClient(Netnaija.VideoUrl + (param != "" ?
-            $"/page/{param!.Split("=").Last()}"
+            $"/page/{page}"
             :
             "")
             )
@@ -130,6 +132,7 @@ namespace Flixr
 
 
             response.Add("movies", videoList);
+            response.Add("page",  (page == null || page == "") ? 1 : int.Parse(page));
             response.Add("header", videoList[index]);
 
 
@@ -188,7 +191,7 @@ namespace Flixr
 
             try
             {
-                currentUrl = Base64Decode(base64.Split("movies/").Last());
+                currentUrl = Base64Decode(base64);
             }
             catch
             {
@@ -204,15 +207,14 @@ namespace Flixr
             string rawHtml = await httpClient.Get();
 
             Document doc = Dcsoup.Parse(rawHtml);
-            Element videoInfo = doc.Select("article.post-body").First;
-            Elements relatedInfo = doc.Select("div.related-posts").First.Select("div.rp-list").First.Select("article.rp-one");
+            Element videoInfo = doc.Select("article[id=\"the-post\"]").First;
+            Elements relatedInfo = doc.Select("div[id=\"related-posts\"]").First.Select("div.related-posts-list").First.Select("div.related-item");
             response.Add(
                 "data",
             new NetnaijaMovieDetail(
                 videoInfo,
                 relatedInfo,
                 currentUrl
-
             )
             );
 
@@ -248,8 +250,10 @@ namespace Flixr
 
             param = location.Split("?", 2).Last().Split("&").Last().Trim();
 
+            string? page = param?.Split("=").Last();
+
             var httpClient = new MyHttpClient(Netnaija.SeriesUrl + (param != "" ?
-            $"/page/{param!.Split("=").Last()}"
+            $"/page/{page}"
             :
             "")
             )
@@ -272,6 +276,7 @@ namespace Flixr
 
 
             response.Add("series", videoList);
+            response.Add("page", (page == null || page == "") ? 1 : int.Parse(page));
             response.Add("header", videoList[index]);
 
 

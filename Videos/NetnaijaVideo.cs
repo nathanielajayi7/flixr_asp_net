@@ -32,7 +32,7 @@ namespace Flixr
 
             foreach (var video in r)
             {
-                var item = NetnaijaVideo.create(video);
+                var item = NetnaijaVideo.create(video, Url);
                 if (item != null)
                     youMayLike.Add(item);
 
@@ -56,15 +56,15 @@ namespace Flixr
         public string? Link { get; set; }
         public string? Id { get; set; }
 
-        public bool isSeries => this.Link?.Contains("videos/series") ?? false;
+        public bool isSeries => this.Link?.Contains("series.") ?? false;
 
-        public bool isMovie => this.Link?.Contains("videos/movies") ?? false;
+        public bool isMovie => !this.isSeries;
 
-        private NetnaijaVideo(Element e)
+        private NetnaijaVideo(Element e, string SourceUrl)
         {
-            this.Name = e.Select("img").First.Attr("title").Split("(", 2).First().Trim();
-            this.Image = e.Select("img").First.Attr("src");
-            this.Link = e.GetElementsByAttribute("href").First.Attr("href");
+            this.Name = e.Select("h2.post-title").First.Select("a").Text.Trim().Split("(", 2).First().Trim();
+            this.Image = SourceUrl + e.Select("img").First.Attr("src");
+            this.Link = SourceUrl + e.Select("a").First.Attr("href");
             this.Id = Base64Encode(e.GetElementsByAttribute("href").First.Attr("href"));
         }
 
@@ -72,17 +72,17 @@ namespace Flixr
         {
             this.Name = Name.Split("(", 2).First().Trim();
             this.Image = Image;
-            this.Link = Image;
+            this.Link = Link;
             this.Id = Base64Encode(Link);
 
         }
 
-        public static NetnaijaVideo? create(Element e)
+        public static NetnaijaVideo? create(Element e, string SourceUrl)
         {
 
-            string Name = e.Select("img").First.Attr("title").Trim();
-            string Image = e.Select("img").First.Attr("src");
-            string Link = e.GetElementsByAttribute("href").First.Attr("href");
+            string Name = e.Select("h2.post-title").First.Select("a").Text.Trim();
+            string Image = Netnaija.VideoUrl + e.Select("img").First.Attr("src");
+            string Link = Netnaija.VideoUrl + e.Select("a").First.Attr("href");
 
             if (Image == null)
             {
@@ -93,7 +93,7 @@ namespace Flixr
                 return null;
             }
 
-            return new NetnaijaVideo(e);
+            return new NetnaijaVideo(e, SourceUrl);
 
         }
 

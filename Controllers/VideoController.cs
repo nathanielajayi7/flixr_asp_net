@@ -106,16 +106,25 @@ namespace Flixr
 
 
             string rawHtml = await httpClient.Get();
+            // Console.WriteLine(rawHtml);
 
             ListDictionary response = new ListDictionary();
 
             List<NetnaijaVideo> videoList = new List<NetnaijaVideo>();
 
             Document doc = Dcsoup.Parse(rawHtml);
-            Elements videoFiles = doc.Select("div.video-files").First.Select("article");
+            Elements videoFiles = doc.Select("li[class=\"post-item tie-standard\"]");
+
+            //print
+            // Console.WriteLine(videoFiles.Count);
+            //print all videos
+            // Console.WriteLine(videoFiles);
+
             for (int i = 0; i < videoFiles.Count; i++)
             {
-                var e = NetnaijaVideo.create(videoFiles[i]);
+                //print
+                Console.WriteLine(videoFiles[i]);
+                var e = NetnaijaVideo.create(videoFiles[i], Netnaija.VideoUrl);
                 if (e != null) videoList.Add(e);
             }
 
@@ -152,7 +161,7 @@ namespace Flixr
             Elements videoFiles = doc.Select("div.trending-list").First.Select("article");
             for (int i = 0; i < videoFiles.Count; i++)
             {
-                var e = NetnaijaVideo.create(videoFiles[i]);
+                var e = NetnaijaVideo.create(videoFiles[i], Netnaija.VideoUrl);
                 if (e != null) videoList.Add(e);
             }
 
@@ -253,10 +262,11 @@ namespace Flixr
             List<NetnaijaVideo> videoList = new List<NetnaijaVideo>();
 
             Document doc = Dcsoup.Parse(rawHtml);
-            Elements videoFiles = doc.Select("div.video-files").First.Select("article");
+            Elements videoFiles = doc.Select("li[class=\"post-item tie-standard\"]");
+
             for (int i = 0; i < videoFiles.Count; i++)
             {
-                var e = NetnaijaVideo.create(videoFiles[i]);
+                var e = NetnaijaVideo.create(videoFiles[i], Netnaija.SeriesUrl);
                 if (e != null) videoList.Add(e);
             }
 
